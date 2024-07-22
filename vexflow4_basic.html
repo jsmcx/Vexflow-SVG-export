@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>VexFlow SVG Example</title>
+</head>
+<body>
+    <div id="output"></div>
+    
+    <!-- Load library -->
+    <script src="https://cdn.jsdelivr.net/npm/vexflow@4.2.2/build/cjs/vexflow.js"></script>
+    
+    <script>
+        const { Factory, EasyScore, System } = Vex.Flow;
+        
+        const vf = new Factory({
+            renderer: { elementId: 'output', width: 500, height: 200 },
+        });
+        
+        const score = vf.EasyScore();
+        const system = vf.System();
+        
+        system
+        .addStave({
+            voices: [
+                score.voice(score.notes('C#5/q, B4, A4, G#4', { stem: 'up' })),
+                score.voice(score.notes('C#4/h, C#4', { stem: 'down' })),
+            ],
+        })
+        .addClef('treble')
+        .addTimeSignature('4/4');
+        
+        vf.draw();
+    </script>
+    
+    
+    <!-- Download button & script -->
+    
+    <button id="download">Download SVG</button>
+    <script>
+        function downloadSVG() {
+            const svgElement = document.querySelector('#output svg');
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const url = URL.createObjectURL(new Blob([svgString], { type: 'image/svg+xml' }));
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'vexflow-output.svg';
+            a.click();
+
+            URL.revokeObjectURL(url);
+        }
+        
+        document.getElementById('download').addEventListener('click', downloadSVG);
+    </script>
+</body>
+</html>
